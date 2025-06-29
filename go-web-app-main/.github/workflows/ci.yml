@@ -1,62 +1,94 @@
-name: Go CI & Docker Build
+# CICD using GitHub actions
 
+name: CI/CD
+
+# Exclude the workflow to run on changes to the helm chart
 on:
   push:
     branches:
       - main
     paths-ignore:
+      - 'helm/**'
+      - 'k8s/**'
       - 'README.md'
 
 jobs:
-  build-and-push:
+
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
+    - name: Set up Go 1.22
+      uses: actions/setup-go@v2
       with:
-        go-version: '1.20'  # or whichever Go version you use
+        go-version: 1.22
 
-    - name: Download Go modules
-      run: go mod download
+    - name: Build
+      run: go build -o go-web-app
 
-    - name: Run tests
+    - name: Test
       run: go test ./...
+  
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v1.56.2
+  
+  push:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v1
 
-    - name: Log in to Docker Hub
+    - name: Login to DockerHub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Set image tag
-      id: vars
-      run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> "$GITHUB_ENV"
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
+    - name: Build and Push action
+      uses: docker/build-push-action@v6
       with:
         context: .
+        file: ./Dockerfile
         push: true
-        tags: talha777/go-web-app:${{ env.TAG }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-web-app:${{github.run_id}}
 
-    - name: Update values.yaml with new image tag
-      run: |
-        sed -i "s/^  tag: .*/  tag: \"${TAG}\"/" helm/go-web-app-chart/values.yaml
-        cat helm/go-web-app-chart/values.yaml
-      env:
-        TAG: ${{ env.TAG }}
+  update-newtag-in-helm-chart:
+    runs-on: ubuntu-latest
 
-    - name: Commit and push updated values.yaml
+    needs: push
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.TOKEN }}
+
+    - name: Update tag in Helm chart
       run: |
-        git config user.name "talhaafawad"
-        git config user.email "talhabinfawad7.com"
+        sed -i 's/tag: .*/tag: "${{github.run_id}}"/' helm/go-web-app-chart/values.yaml
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.email "talhabinfawad7@gmail.com"
+        git config --global user.name "talhaafawad"
         git add helm/go-web-app-chart/values.yaml
-        git commit -m "Update image tag to ${{ env.TAG }}" || echo "No changes to commit"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+        git commit -m "Update tag in Helm chart"
+        git push

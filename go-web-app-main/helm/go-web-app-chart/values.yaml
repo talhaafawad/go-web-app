@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: talha777/go-web-app
+  pullPolicy: IfNotPresent
+  tag: "v1"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false  # Set to true when you're ready
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: go-web-app.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

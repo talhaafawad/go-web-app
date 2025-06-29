@@ -43,10 +43,10 @@ jobs:
         TAG: ${{ env.TAG }}
 
     - name: Commit and push updated values.yaml
-      - name: Commit and push updated values.yaml
-      run: |
-        git config user.name "talhaafawad"
-        git config user.email "talhabinfawad7.com"
-        git add helm/go-web-app-chart/values.yaml
-        git commit -m "Update image tag to ${{ env.TAG }}" || echo "No changes to commit"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+  run: |
+    git config user.name "talhaafawad"
+    git config user.email "talhabinfawad7.com"
+    git add helm/go-web-app-chart/values.yaml
+    git commit -m "Update image tag to ${{ env.TAG }}" || echo "No changes to commit"
+    git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+

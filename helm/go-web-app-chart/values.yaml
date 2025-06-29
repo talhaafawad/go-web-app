@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: talha777/go-web-app
   pullPolicy: IfNotPresent
-  tag: "v1"
+  tag: "15958623973"
 
 service:
   type: ClusterIP

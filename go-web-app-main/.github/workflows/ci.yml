@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set image tag
+      id: vars
+      run: echo "TAG=$(date +%Y%m%d%H%M%S)" >> "$GITHUB_ENV"
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: talha777/go-web-app:${{ env.TAG }}
+
+    - name: Update values.yaml with new image tag
+      run: |
+        sed -i "s/^  tag: .*/  tag: \"${TAG}\"/" helm/go-web-app-chart/values.yaml
+        cat helm/go-web-app-chart/values.yaml
+      env:
+        TAG: ${{ env.TAG }}
+
+    - name: Commit and push updated values.yaml
+  run: |
+    git config user.name "talhaafawad"
+    git config user.email "talhabinfawad7.com"
+    git add helm/go-web-app-chart/values.yaml
+    git commit -m "Update image tag to ${{ env.TAG }}" || echo "No changes to commit"
+    git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+

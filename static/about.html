@@ -1,90 +1,100 @@
-<Docktype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>About</title>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }
+<head>
+    <title>About</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="home">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="contact">Contact</a></li>
+                <li><a href="courses">Courses</a></li>
+            </ul>
+        </nav>
+    </header>
 
-            header {
-                background-color: #333;
-                color: #fff;
-                padding: 10px 0;
-                text-align: center;
-            }
+    <main>
+        <section>
+            <h1>About Talha Bin Fawad</h1>
+            <p>Hello! I'm Talha, a passionate software engineer and DevOps enthusiast based in Cambridge, UK. This project represents my journey in mastering DevOps tools and practices through hands-on experience.</p>
+            <p>While working on this project, I leveraged Kubernetes, Helm, and ArgoCD to automate deployment and infrastructure management, gaining deep insights into GitOps workflows and continuous delivery pipelines.</p>
+            <p>The project involved designing scalable CI/CD pipelines using GitHub Actions, containerizing applications with Docker, and managing PostgreSQL databases for persistent storage.</p>
+            <p>Throughout, I focused on practical problem-solving — troubleshooting deployment issues, DNS and networking configurations, and integrating monitoring tools like Prometheus and Grafana to ensure reliability.</p>
+            <p>This project sharpened my skills in infrastructure as code, automation, and cloud-native technologies, preparing me for real-world challenges in software delivery and operations.</p>
+        </section>
 
-            nav ul {
-                list-style-type: none;
-                padding: 0;
-            }
+        <section>
+            <h2>Key Skills Applied</h2>
+            <ul>
+                <li>Kubernetes & Helm: Managing cluster resources and packaging deployments</li>
+                <li>ArgoCD: Implementing GitOps for automated, declarative deployments</li>
+                <li>CI/CD: Building automated pipelines with GitHub Actions and Jenkins</li>
+                <li>Containerization: Dockerizing applications for consistent environments</li>
+                <li>Monitoring: Integrating Prometheus and Grafana for real-time insights</li>
+                <li>Networking & Troubleshooting: DNS resolution, LoadBalancer configuration, and security rules</li>
+            </ul>
+        </section>
 
-            nav ul li {
-                display: inline;
-                margin-right: 10px;
-            }
+        <section>
+            <h2>Troubleshooting Highlights</h2>
+            <p><strong>Issue:</strong> Encountered DNS resolution errors and connection timeouts when accessing apps or Git repositories via ArgoCD.</p>
+            <p><strong>Resolution:</strong> Investigated and adjusted EKS security groups to allow outbound UDP on port 53, reconfigured network ACLs, and recreated the Kubernetes cluster with improved settings using a <code>/manage</code> configuration option.</p>
+            <p>Additionally, I reinstalled ArgoCD and ingress controllers, and updated local hosts files for testing with the LoadBalancer's external IP. These steps resolved connectivity issues and stabilized deployments.</p>
+        </section>
+    </main>
 
-            nav ul li a {
-                color: #fff;
-                text-decoration: none;
-            }
-
-            main {
-                padding: 20px;
-            }
-
-            section {
-                margin-bottom: 20px;
-            }
-
-            footer {
-                background-color: #333;
-                color: #fff;
-                text-align: center;
-                padding: 10px 0;
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="home">Home</a></li>
-                    <li><a href="about">About</a></li>
-                    <li><a href="contact">Contact</a></li>
-                    <li><a href="courses">Courses</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <main>
-            <section>
-                <h1>About the Author</h1>
-                <p>Hi Everyone, My name is Abhishek and welcome to my channel :)</p>
-
-                    <p>    I am an opensource enthusiast and a great believer in sharing knowledge. </p>
-                        <p>  I have my footprints in popular opensource projects like Argo CD, Argo CD Operator, Argo Rollouts Manager, GitOps Operator, F5 Ingress Controller, Nginx Ingress Controller by Nginx and others. </p>
-                    
-                            <p> Apart from working with Red Hat as a GitOps product lead, I also hold below positions in OpenSource communities</p>
-                                <p>  - Maintainer of Argo CD Operator</p>
-                                    <p> - Creator of Argo Rollouts Manager</p>
-                                        <p> - Maintainer of RedHat Developer (GitOps operator)</p>
-                                            <p> - Member of Argo Project</p>
-                                                <p> - Member of Argo SIG Security</p>
-                    
-                                                    <p> If you want to learn complete devops for free with practical projects, checkout the playlist</p>
-                                                        <p><a href="https://www.youtube.com/playlist?list=PLdpzxOOAlwvIKMhk8WhzN1pYoJ1YU8Csa"> Playlists</a></p>
-                    
-                                                            <p> Please subscribe to the channel to keep learning and growing together. Thanks :)</p>
-            </section>
-        </main>
-
-        <footer>
-            <p>&copy; Abhishek.Veeramalla</p>
-        </footer>
-    </body>
+    <footer>
+        <p>&copy; Talha Bin Fawad</p>
+    </footer>
+</body>
 </html>
